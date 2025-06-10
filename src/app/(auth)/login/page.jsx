@@ -1,6 +1,5 @@
 "use client";
 
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -10,25 +9,24 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const router = useRouter();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setError("");
+ const handleLogin = async (e) => {
+  e.preventDefault();
+  setError("");
 
-    const result = await signIn("credentials", {
-      redirect: false,
-      email,
-      password,
-      callbackUrl: "/dashboard", // fallback just in case
-    });
+  const res = await fetch("/api/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
 
-    console.log("sfsfsfgsdfgdsfg", result);
+  if (res.ok) {
+    router.push("/dashboard");
+  } else {
+    const data = await res.json();
+    setError(data.message || "Invalid email or password");
+  }
+};
 
-    if (result?.ok) {
-      setTimeout(() => router.push("/dashboard"), 100); // slight delay
-    } else {
-      setError("Invalid email or password");
-    }
-  };
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="max-w-md w-full space-y-8 p-10 bg-white rounded-lg shadow-lg">

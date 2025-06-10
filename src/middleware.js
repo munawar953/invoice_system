@@ -1,33 +1,24 @@
-import { getToken } from "next-auth/jwt";
-import { NextResponse } from "next/server";
+// middleware.js
+import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 
-const publicRoutes = ["/login"];
+const PUBLIC_PATHS = ["/login", "/api/login", "/api/register"];
 
-export async function middleware(req) {
-  const token = await getToken({ req });
-  const isAuthenticated = !!token;
+export function middleware(req) {
+  const session = req.cookies.get("session");
 
-  const { pathname } = req.nextUrl;
-
-  if (publicRoutes.includes(pathname)) {
-    // Allow access to public routes
-    if (isAuthenticated && pathname === "/login") {
-      // Redirect logged-in users away from login page
-      return NextResponse.redirect(new URL("/dashboard", req.url));
-    }
+  if (PUBLIC_PATHS.includes(req.nextUrl.pathname)) {
     return NextResponse.next();
   }
 
-  // If not authenticated, redirect to /login
-  if (!isAuthenticated) {
+  // If no session, redirect to login
+  if (!session) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
   return NextResponse.next();
 }
 
-// Specify paths the middleware should apply to
 export const config = {
-  //   matcher: ["/((?!_next|api|favicon.ico|images|.*\\..*).*)"],
-  matcher: ["/((?!_next|api/auth|favicon.ico|images|.*\\..*).*)"],
+  matcher: ["/((?!_next|static|favicon.ico).*)"],
 };
