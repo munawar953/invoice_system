@@ -72,14 +72,12 @@
 
 
 
-// app/api/auth/[...nextauth]/route.ts
-
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import prisma from "@/lib/client";
 
-export const authOptions = {
+const authOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -93,7 +91,7 @@ export const authOptions = {
           include: { role: true },
         });
 
-        if (user && (await bcrypt.compare(credentials.password, user.password))) {
+        if (user && await bcrypt.compare(credentials.password, user.password)) {
           return {
             id: user.id,
             name: user.name,
@@ -137,4 +135,5 @@ export const authOptions = {
 
 const handler = NextAuth(authOptions);
 
+// ✅ Important: Required export for Next.js App Router API routes
 export { handler as GET, handler as POST };
