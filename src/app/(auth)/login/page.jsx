@@ -1,5 +1,6 @@
-'use client';
+"use client";
 
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -13,18 +14,21 @@ export default function LoginPage() {
     e.preventDefault();
     setError("");
 
-    try {
-      // Example placeholder login logic
-      if (email === "admin@example.com" && password === "password123") {
-        router.push("/dashboard");
-      } else {
-        setError("Invalid email or password.");
-      }
-    } catch (err) {
-      setError("Something went wrong. Please try again.");
+    const result = await signIn("credentials", {
+      redirect: false,
+      email,
+      password,
+      callbackUrl: "/dashboard", // fallback just in case
+    });
+
+    console.log("sfsfsfgsdfgdsfg", result);
+
+    if (result?.ok) {
+      setTimeout(() => router.push("/dashboard"), 100); // slight delay
+    } else {
+      setError("Invalid email or password");
     }
   };
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="max-w-md w-full space-y-8 p-10 bg-white rounded-lg shadow-lg">
@@ -32,13 +36,19 @@ export default function LoginPage() {
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             Sign in to your account
           </h2>
-          {error && <p className="mt-2 text-center text-sm text-red-600">{error}</p>}
+          {error && (
+            <p className="mt-2 text-center text-sm text-red-600">{error}</p>
+          )}
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleLogin}>
           <input type="hidden" name="remember" value="true" />
           <div className="rounded-md shadow-sm space-y-4">
+            {" "}
+            {/* Increased space between inputs */}
             <div>
-              <label htmlFor="email-address" className="sr-only">Email address</label>
+              <label htmlFor="email-address" className="sr-only">
+                Email address
+              </label>
               <input
                 id="email-address"
                 name="email"
@@ -52,7 +62,9 @@ export default function LoginPage() {
               />
             </div>
             <div>
-              <label htmlFor="password" className="sr-only">Password</label>
+              <label htmlFor="password" className="sr-only">
+                Password
+              </label>
               <input
                 id="password"
                 name="password"
