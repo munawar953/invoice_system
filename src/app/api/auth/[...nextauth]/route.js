@@ -22,10 +22,12 @@ const handler = NextAuth({
         });
 
         // if (user && await bcrypt.compareSync(credentials.password, user.password)) {
-        if (
-          user &&
-          (await bcrypt.compare(credentials.password, user.password))
-        ) {
+        // if (
+        //   user &&
+        //   (await bcrypt.compare(credentials.password, user.password))
+        // ) {
+        if (user && (await bcrypt.compare(credentials.password, user.password))) {
+
           return {
             id: user.id,
             name: user.name,
