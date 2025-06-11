@@ -1,20 +1,19 @@
 "use client";
-
 import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation"; // Correct import for useRouter
-import { Button } from "../components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../components/ui/card";
-import { Textarea } from "../components/ui/textarea";
-import { Input } from "../components/ui/input";
-import { Label } from "../components/ui/label";
+} from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import Loader from "@/components/Loader/Loader";
+import useSession from "@/hooks/useSession";
 
 export default function CreateInvoice() {
   const { data: session, status } = useSession();
@@ -37,7 +36,7 @@ export default function CreateInvoice() {
     if (status === "loading") return;
     if (!session) {
       router.push("/login");
-    } else if (session.user.role !== "ADMIN") {
+    } else if (!session) {
       router.push("/dashboard");
     } else {
       fetchCustomers();
