@@ -64,7 +64,7 @@ const EditInvoiceForm = ({ invoice, onClose }) => {
                 </div>
                 <div>
                     <label htmlFor="status" className="block font-medium">Status:</label>
-                    <select id="status" name="status" value={formData.status} onChange={handleChange} className="mt-1 block w-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md">
+                    <select id="status" name="status" value={formData.status} onChange={handleChange} className="mt-1 px-2 py-1 block w-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md">
                         <option value="pending">Pending</option>
                         <option value="paid">Paid</option>
                         <option value="overdue">Overdue</option>
