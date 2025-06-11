@@ -1,5 +1,5 @@
 import React from 'react'
-import { Sidebar, SidebarProvider } from '../components/ui/sidebar'
+import { Sidebar, SidebarProvider } from '@/components/ui/sidebar'
 
 const page = () => {
   return (
